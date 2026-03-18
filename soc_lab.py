@@ -7,7 +7,7 @@ import requests
 from collections import Counter
 
 # ------------------------------------------------
-# CONFIGURATION
+# Script Settings
 # ------------------------------------------------
 
 INTERFACE = "eth0"              # Change if needed (check with: ip a)
@@ -19,6 +19,7 @@ CSV_FILE = "traffic.csv"
 ALERT_FILE = "alert.json"
 
 # ---- Airia Webhook ----
+# (I redacted my real key for GitHub)
 AIRIA_API_URL = "https://api.airia.ai/v2/PipelineExecution/26d0eeea-4e41-43fb-8c27-d91f6077875c"
 AIRIA_API_KEY = "REDACTED_API_KEY_FOR_PUBLIC_REPO"
 
@@ -28,7 +29,7 @@ DESTINATION_IP = "192.168.1.231"
 
 
 # ------------------------------------------------
-# HELPER
+# Function to run shell commands
 # ------------------------------------------------
 
 def run_command(cmd, description):
@@ -36,7 +37,7 @@ def run_command(cmd, description):
     subprocess.run(cmd, check=True)
 
 # ------------------------------------------------
-# STEP 1 – Capture Traffic
+# STEP 1 – Capture ICMP traffic with tshark
 # ------------------------------------------------
 
 def capture_traffic():
@@ -59,7 +60,7 @@ def capture_traffic():
     print(f"[+] Capture saved to {PCAP_FILE}")
 
 # ------------------------------------------------
-# STEP 2 – Convert to CSV
+# STEP 2 – convert pcap to CSV so Python can read
 # ------------------------------------------------
 
 def convert_to_csv():
@@ -85,9 +86,9 @@ def convert_to_csv():
 
     print(f"[+] CSV created at {CSV_FILE}")
 
-# ------------------------------------------------
-# STEP 3 – Analyze Traffic
-# ------------------------------------------------
+# ---------------------------------------------------------
+# STEP 3 – count packets per source IP and flag noisy ones
+# ---------------------------------------------------------
 
 def analyze_traffic():
     ip_counter = Counter()
@@ -113,7 +114,7 @@ def analyze_traffic():
     print("\n[+] No suspicious activity detected.")
     return None, None
 # ------------------------------------------------
-# STEP 4 – Generate Alert JSON
+# STEP 4 – build the alert JSON
 # ------------------------------------------------
 
 def generate_alert(ip, count):
@@ -141,7 +142,7 @@ def generate_alert(ip, count):
     return alert
 
 # ------------------------------------------------
-# STEP 5 – Send to Airia API
+# STEP 5 – send the alert to AI agent (Airia)
 # ------------------------------------------------
 
 def send_to_airia(alert):
@@ -177,7 +178,7 @@ def send_to_airia(alert):
         print(response.text)
 
 # ------------------------------------------------
-# MAIN
+# Main workflow
 # ------------------------------------------------
 
 def main():
