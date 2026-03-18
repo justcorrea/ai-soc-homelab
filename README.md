@@ -1,6 +1,6 @@
 # AI-Driven SOC Home Lab
 
-Kali-based SOC home lab that captures ICMP traffic with TShark, analyzes packet volume in Python, and sends JSON alerts to an AI SOC agent (Airia) via REST API for automated triage.
+This is a small SOC home lab I built to practice networking and alert triage. I followed a YouTube tutorial that provided a starter Python script, then set it up in my own Kali/Windows environment, fixed the networking/IP issues, and adapted the script to my lab (thresholds, IPs, and API settings).
 
 ## Lab Overview
 
@@ -24,7 +24,7 @@ This project simulates a junior SOC analyst workflow:
 
 ## Files
 
-- `soc_lab.py` – main automation script:
+- `soc_lab.py` – Python script used in this lab (adapted from a tutorial):
   - Captures ICMP traffic with TShark
   - Converts PCAP to CSV
   - Counts packets per source IP and applies a threshold
